@@ -1,0 +1,77 @@
+<div class="bg-gradient-to-l from-slate-800 to-slate-950  flex items-center justify-center w-full h-full">
+
+
+    <section *ngIf="WeatherData().main" id=" Card-contianer"
+        class="max-sm:w-11/12 max-md:w-3/5 max-lg:w-3/5 lg:w-1/4 h-5/6 bg-zinc-600 flex flex-col">
+        <div *ngIf="WeatherData().main?.temp >= 27 " id="hot"
+            class=" flex flex-col justify-items-center items-center w-full h-full  bg-cover bg-no-repeat bg-green-400"
+            style="background-image: url(assets/Images/hot.jpg);">
+            <p class="text-white text-5xl font-bold bg-black/30 p-5 rounded">{{WeatherData().main?.temp}}<sup>°c</sup>
+            </p>
+            <p class="text-white text-2xl font-bold bg-black/30 px-2 rounded">{{WeatherData().name}}
+            </p>
+        </div>
+        <div *ngIf="WeatherData()?.main?.temp >20 && WeatherData()?.main?.temp < 27 " id="neutral"
+            class="flex flex-col justify-center items-center w-full h-full bg-cover bg-no-repeat bg-green-400"
+            style="background-image: url(assets/Images/neutral.jpg);">
+            <p class="text-white text-5xl font-bold bg-black/30 p-5 rounded">{{WeatherData().main?.temp}}<sup>°c</sup>
+            </p>
+            <p class="text-white text-2xl font-bold bg-black/30  px-2 rounded">{{WeatherData().name}}
+            </p>
+        </div>
+        <div *ngIf="WeatherData().main?.temp <= 20" id="cold"
+            class="flex flex-col justify-center items-center w-full h-full bg-cover bg-no-repeat bg-green-400"
+            style="background-image: url(assets/Images/cold.jpg);">
+            <p class="text-white text-5xl font-bold bg-black/30 p-5 rounded">{{WeatherData().main?.temp}}<sup>°c</sup>
+            </p>
+            <p class="text-white text-2xl font-bold bg-black/30 px-2 rounded">{{WeatherData().name}}
+            </p>
+        </div>
+        <div id="details" class="w-full h-full flex justify-center items-center text-white">
+            <div id="cards-info" class="bg-green  h-5/6 w-11/12 grid grid-cols-2 grid-rows-2 gap-1">
+                <div class="w-full h-full  rounded-md bg-black/30 p-2">
+                    <mat-icon fontIcon="thermostat"></mat-icon>
+                    <p>Temperatura maxima</p>
+                    <p>{{WeatherData().main?.temp_max}}</p>
+
+                </div>
+                <div class="w-full h-full  rounded-md bg-black/30 p-2">
+
+                    <mat-icon fontIcon="thermostat"></mat-icon>
+                    <p>Temperatura minima</p>
+                    <p>{{WeatherData().main?.temp_max}}</p>
+                </div>
+                <div class="w-full h-full  rounded-md bg-black/30 p-2">
+
+                    <mat-icon fontIcon="air"></mat-icon>
+                    <p>Viento</p>
+                    <p>{{WeatherData().main?.temp_max}}</p>
+                </div>
+                <div class="w-full h-full  rounded-md bg-black/30 p-2">
+
+                    <mat-icon fontIcon="water"></mat-icon>
+                    <p>Humedad</p>
+                    <p>{{WeatherData().main?.temp_max}}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section *ngIf="WeatherData().main == undefined" id=" Card-contianer"
+        class="max-sm:w-11/12 w-1/4 h-5/6 bg-zinc-500 flex flex-col">
+        <div id="neutral" class="w-full h-full bg-cover bg-no-repeat bg-green-400"
+            style="background-image: url(assets/Images/neutral.jpg);">
+        </div>
+
+        <div id="details" class="w-full h-full flex justify-center items-center">
+            <div class="wrapper">
+                <div class="circle"></div>
+                <div class="circle"></div>
+                <div class="circle"></div>
+                <div class="shadow"></div>
+                <div class="shadow"></div>
+                <div class="shadow"></div>
+            </div>
+        </div>
+    </section>
+</div>

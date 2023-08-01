@@ -1,0 +1,8 @@
+{
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#521343",
+    "titleBar.activeBackground": "#731B5E",
+    "titleBar.activeForeground": "#FDF8FC"
+  },
+  "cSpell.words": ["geolocalización"]
+}
