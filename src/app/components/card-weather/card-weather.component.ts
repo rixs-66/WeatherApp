@@ -1,5 +1,4 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { LoaderService } from 'src/app/services/loader.service';
 import { WeatherApiService } from '../../services/weather-api.service';
 import { WeatherData } from 'src/app/interfaces/weather';
 import { AnimationOptions } from 'ngx-lottie';
@@ -21,72 +20,54 @@ export class CardWeatherComponent {
   public clima = signal<string>('clima');
   public description = signal<string>('clima');
   public icon = signal<string>('clima');
+  public city = signal<string>('new york');
 
-  public LoadService = inject(LoaderService);
   public WeatherApiService = inject(WeatherApiService);
 
   constructor() {
-    this.obtenerUbicacion();
+    this.getLocation(this.city());
   }
 
   obtenerUbicacion() {
-    if (navigator.geolocation) {
-      this.LoadService.showLoader.set(true); // Mostrar el loader mientras se obtiene la ubicación
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.latitude.set(position.coords.latitude);
-          this.longitude.set(position.coords.longitude);
-          this.LoadService.showLoader.set(false);
+    this.WeatherApiService.getWeather(
+      this.latitude(),
+      this.longitude()
+    ).subscribe(
+      (info) => {
+        this.WeatherData.set(info);
+        this.clima.set(this.WeatherData().weather[0].main);
+        this.description.set(this.WeatherData().weather[0].description);
+        this.icon.set(this.WeatherData().weather[0].icon);
 
-          this.WeatherApiService.getWeather(
-            this.latitude(),
-            this.longitude()
-          ).subscribe(
-            (info) => {
-              this.WeatherData.set(info);
-              this.clima.set(this.WeatherData().weather[0].main);
-              this.description.set(this.WeatherData().weather[0].description);
-              this.icon.set(this.WeatherData().weather[0].icon);
+        console.log(this.WeatherData());
 
-              console.log(this.WeatherData());
+        const climaActual = this.clima();
+        const currentTime = Math.floor(Date.now() / 1000); // Hora actual en UNIX timestamp
+        const localTime = currentTime + this.WeatherData().timezone; // Timestamp en la zona horaria local
 
-              const climaActual = this.clima();
-              const currentTime = Math.floor(Date.now() / 1000); // Hora actual en UNIX timestamp
-              const localTime = currentTime + this.WeatherData().timezone; // Timestamp en la zona horaria local
+        const isDaytime =
+          localTime >= this.WeatherData().sys.sunrise &&
+          localTime < this.WeatherData().sys.sunset;
 
-              const isDaytime =
-                localTime >= this.WeatherData().sys.sunrise &&
-                localTime < this.WeatherData().sys.sunset;
-
-              console.log(isDaytime ? true : false);
-            },
-            (error) => {}
-          );
-        },
-        (error) => {
-          if (error.code === error.PERMISSION_DENIED) {
-            const retry = confirm(
-              'Para obtener el clima, necesitamos tu ubicación. Por favor, vuelve a intentar permitir el acceso a tu ubicación.'
-            );
-            if (retry) {
-              this.obtenerUbicacion(); // Vuelve a pedir la ubicación
-            }
-          }
-        }
-      );
-    } else {
-      // Manejo adicional si el navegador no es compatible con la geolocalización
-      // ...
-    }
+        console.log(isDaytime ? true : false);
+      },
+      (error) => {}
+    );
   }
 
-  obtenerHora(timestamp: number): string {
-    const date = new Date(timestamp * 1000); // Convertir el timestamp a milisegundos
+  getvalue(event: Event) {
+    const inputVal = (event.target as HTMLInputElement).value;
+    this.getLocation(inputVal);
+    this.WeatherData.set(undefined);
+  }
 
-    const horas = date.getHours().toString().padStart(2, '0');
-    const minutos = date.getMinutes().toString().padStart(2, '0');
-    const segundos = date.getSeconds().toString().padStart(2, '0');
+  getLocation(val: string) {
+    this.WeatherApiService.getDirection(val).subscribe((data: any) => {
+      this.latitude.set(data[0].lat);
+      this.longitude.set(data[0].lon);
 
-    return `${horas}:${minutos}:${segundos}`;
+      console.log(this.latitude());
+      this.obtenerUbicacion();
+    });
   }
 }
