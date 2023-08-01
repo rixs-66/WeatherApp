@@ -39,8 +39,6 @@ export class CardWeatherComponent {
         this.description.set(this.WeatherData().weather[0].description);
         this.icon.set(this.WeatherData().weather[0].icon);
 
-        console.log(this.WeatherData());
-
         const climaActual = this.clima();
         const currentTime = Math.floor(Date.now() / 1000); // Hora actual en UNIX timestamp
         const localTime = currentTime + this.WeatherData().timezone; // Timestamp en la zona horaria local
@@ -48,8 +46,6 @@ export class CardWeatherComponent {
         const isDaytime =
           localTime >= this.WeatherData().sys.sunrise &&
           localTime < this.WeatherData().sys.sunset;
-
-        console.log(isDaytime ? true : false);
       },
       (error) => {}
     );
@@ -62,12 +58,14 @@ export class CardWeatherComponent {
   }
 
   getLocation(val: string) {
-    this.WeatherApiService.getDirection(val).subscribe((data: any) => {
-      this.latitude.set(data[0].lat);
-      this.longitude.set(data[0].lon);
+    this.WeatherApiService.getDirection(val).subscribe(
+      (data: any) => {
+        this.latitude.set(data.length != 0 ? data[0].lat : 0);
+        this.longitude.set(data.length != 0 ? data[0].lon : 0);
 
-      console.log(this.latitude());
-      this.obtenerUbicacion();
-    });
+        this.obtenerUbicacion();
+      },
+      (error) => {}
+    );
   }
 }
