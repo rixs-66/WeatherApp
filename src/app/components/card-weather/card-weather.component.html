@@ -2,9 +2,9 @@
 
 
     <section *ngIf="WeatherData().main" id=" Card-contianer"
-        class="max-sm:w-11/12 max-md:w-3/5 max-lg:w-3/5 lg:w-1/4 h-5/6 bg-zinc-600 flex flex-col">
+        class="max-sm:w-11/12 max-md:w-3/5 max-lg:w-3/5 lg:w-1/4 h-5/6 bg-zinc-600 flex flex-col ">
         <div *ngIf="WeatherData().main?.temp >= 27 " id="hot"
-            class=" flex flex-col justify-items-center items-center w-full h-full  bg-cover bg-no-repeat bg-green-400"
+            class="flex flex-col justify-center items-center w-full h-full bg-cover bg-no-repeat bg-green-400"
             style="background-image: url(assets/Images/hot.jpg);">
             <p class="text-white text-5xl font-bold bg-black/50 p-5 rounded">{{WeatherData().main?.temp}}<sup>°c</sup>
             </p>
